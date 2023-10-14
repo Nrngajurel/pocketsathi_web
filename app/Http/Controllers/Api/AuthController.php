@@ -86,8 +86,8 @@ class AuthController extends Controller
     public function updateLocation(Request $request)
     {
         $request->validate([
-            'long' => 'required|string',
-            'lat' => 'required|string',
+            'long' => 'required',
+            'lat' => 'required',
         ]);
 
         $user = $request->user();
