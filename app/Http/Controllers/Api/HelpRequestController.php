@@ -14,7 +14,14 @@ class HelpRequestController extends Controller
      */
     public function myHelpRequest()
     {
-        $helpRequests = HelpRequest::with('applies')->where('requester_id', auth()->id())->latest()->get();
+        $helpRequests = HelpRequest::with([
+            'applies' => function ($query) {
+                // join with user applier_id
+                $query->join('users', 'users.id', '=', 'applies.applier_id')
+                    ->select('applies.*', 'users.name', 'users.email');
+
+            }
+        ])->where('requester_id', auth()->id())->latest()->get();
         return response()->json($helpRequests);
     }
 
@@ -23,6 +30,7 @@ class HelpRequestController extends Controller
         $user = auth()->user();
 
         // nearby request based on location of user
+        // also add a column has applied to check if user has applied to this request
         $helpRequests = HelpRequest::nearBy($user->lat, $user->long, 10)
             ->whereNotIn('requester_id', [$user->id])
             ->latest()

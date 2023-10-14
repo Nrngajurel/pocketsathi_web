@@ -1,7 +1,10 @@
 <?php
 
+use App\Models\HelpRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
+use Kreait\Firebase\Factory;
+use Kreait\Firebase\Messaging\CloudMessage;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,12 +18,29 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    $lat = 40.8127; // Example latitude
-    $lon = -74.0060; // Example longitude
-    $radius = 1000; // Example radius in kilometers
-    $nearbyUsers = User::nearby($lat, $lon, $radius)->get();
-    dd($nearbyUsers);
-    return view('welcome');
+
+    // $helpRequest = HelpRequest::first();
+    // $helpRequest->notifyNearby();
+
+    // send firebase notification to ctyuTOYKSD-M_BofnBOaAQ:APA91bFMiDSRbRcHxNCjNfJeveBFrlnl9AcUuu2HTua8w7CXClq8iDGqKYRdRSQI0Hz0Ueued8GxfASsqKD2haFqOP4lwKbA3s0w1jm9Pw7EdMqJkLyU_E1FxmBAHfWdnxWA-zrEpd2R token
+    $firebase = (new Factory)
+        ->withServiceAccount(public_path('pocketsathi-firebase-adminsdk-9s4u4-01c9a943c8.json'));
+    $messaging = $firebase->createMessaging();
+
+    $message = CloudMessage::withTarget('token', 'egbvp3XuTeaxH8whpTKQ4i:APA91bGnkyxQu_CunDLRmJM45v47e2gka4PSCi8NZZpUoxrTvMwt914MVb1P7kw0jsPU_hRXvu8fIesm-6dEmfkt2WxPvmgQckWZGdoC5AI_EjA2IN7oZ-MG0PNYl-UA_Q9Hhl79cbOX')
+        ->withNotification([
+            'title' => 'Help Request Nearby',
+            'body' => 'A help request is nearby. Can you assist?'
+        ]);
+
+    $messaging->send($message);
+    // $user = User::first();
+
+    // $nearByRequests = HelpRequest::nearby($user->lat, $user->long, 10)->get();
+    // $all_request = HelpRequest::all();
+    // dd($nearByRequests, $user->lat, $user->long, $all_request);
+
+    // return view('welcome');
 });
 
 Route::middleware([

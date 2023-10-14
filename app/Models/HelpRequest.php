@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\Statusable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Kreait\Firebase\Factory;
 use Kreait\Firebase\Messaging\CloudMessage;
 
 class HelpRequest extends Model
@@ -29,18 +30,19 @@ class HelpRequest extends Model
 
     public function notifyNearby()
     {
-        //     $firebase = app('firebase');
-        //     $messaging = $firebase->getMessaging();
-        //     $nearByUser = User::nearby($this->lat, $this->long, 15)->get();
-        //     $nearByUser->each(function ($user) use ($firebase, $messaging) {
-        //         // send notification to user by firebase
-        //         $message = CloudMessage::withTarget('token', $user->fcm_token)
-        //             ->withNotification([
-        //                 'title' => 'Help Request Nearby',
-        //                 'body' => 'A help request is nearby. Can you assist?'
-        //             ]);
+        $firebase = (new Factory)
+            ->withServiceAccount(public_path('pocketsathi-firebase-adminsdk-9s4u4-01c9a943c8.json'));
+        $messaging = $firebase->createMessaging();
+        $nearByUser = User::whereNotNull('fcm_token')->nearby($this->lat, $this->long, 15)->get();
+        $nearByUser->each(function ($user) use ($firebase, $messaging) {
+            // send notification to user by firebase
+            $message = CloudMessage::withTarget('token', $user->fcm_token)
+                ->withNotification([
+                    'title' => 'Help Request Nearby',
+                    'body' => 'A help request is nearby. Can you assist?'
+                ]);
 
-        //         $messaging->send($message);
-        //     });
+            $messaging->send($message);
+        });
     }
 }
