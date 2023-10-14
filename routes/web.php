@@ -41,7 +41,7 @@ Route::get('/', function () {
             dump('sent to ' . $user->name);
 
         } catch (\Throwable $th) {
-            dump('error sending to ' . $user->name);
+            dump('error sending to ' . $user->name . "Error: " . $th->getMessage());
             //throw $th;
         }
 
