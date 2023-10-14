@@ -21,7 +21,8 @@ class HelpRequest extends Model
     }
     public function scopeNearby($query, $lat, $lon, $radius)
     {
-        return $query->selectRaw('*, (6371 * acos(cos(radians(?)) * cos(radians(help_requests.lat)) * cos(radians(help_requests.long) - radians(?)) + sin(radians(?)) * sin(radians(help_requests.lat)))) AS distance', [$lat, $lon, $lat])
+        return $query
+            ->selectRaw('*, (6371 * acos(cos(radians(?)) * cos(radians(help_requests.lat)) * cos(radians(help_requests.long) - radians(?)) + sin(radians(?)) * sin(radians(help_requests.lat)))) AS distance', [$lat, $lon, $lat])
             ->having('distance', '<=', $radius)
             ->orderBy('distance');
     }

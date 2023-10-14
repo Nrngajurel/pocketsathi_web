@@ -21,8 +21,9 @@ class HelpRequestController extends Controller
     public function nearbyHelpRequest()
     {
         $user = auth()->user();
+
         // nearby request based on location of user
-        $helpRequests = HelpRequest::nearBy($user->latitude, $user->longitude, 10)
+        $helpRequests = HelpRequest::nearBy($user->lat, $user->long, 10)
             ->whereNotIn('requester_id', [$user->id])
             ->latest()
             ->get();
