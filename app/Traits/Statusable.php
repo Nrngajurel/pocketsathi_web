@@ -11,6 +11,8 @@ trait Statusable
     {
         return $this->morphMany(Status::class, 'statusable');
     }
+    // latest of may status
+
     public function getCurrentStatusAttribute(): ?string
     {
         $latestStatus = $this->statuses()->latest()->first();
@@ -18,19 +20,24 @@ trait Statusable
         return $latestStatus ? $latestStatus->status : null;
     }
 
-    public function approve(){
+    public function approve()
+    {
         $this->addStatus('approve');
     }
-    public function accept(){
+    public function accept()
+    {
         $this->addStatus('accept');
     }
-    public function reject(){
+    public function reject()
+    {
         $this->addStatus('reject');
     }
-    public function completed(){
+    public function completed()
+    {
         $this->addStatus('complete');
     }
-    public function cancel(){
+    public function cancel()
+    {
         $this->addStatus('cancel');
     }
     public function addStatus(string $status, $user_id = null): Status

@@ -14,7 +14,19 @@ class HelpRequestController extends Controller
      */
     public function myHelpRequest()
     {
-        return response()->json(HelpRequest::with('applies')->where('requester_id', auth()->id())->latest()->paginate());
+        $helpRequests = HelpRequest::with('applies')->where('requester_id', auth()->id())->latest()->get();
+        return response()->json($helpRequests);
+    }
+
+    public function nearbyHelpRequest()
+    {
+        $user = auth()->user();
+        // nearby request based on location of user
+        $helpRequests = HelpRequest::nearBy($user->latitude, $user->longitude, 10)
+            ->whereNotIn('requester_id', [$user->id])
+            ->latest()
+            ->get();
+        return response()->json($helpRequests);
     }
 
     /**
@@ -37,37 +49,7 @@ class HelpRequestController extends Controller
         ]);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(HelpRequest $helpRequest)
-    {
-        //
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(HelpRequest $helpRequest)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateHelpRequestRequest $request, HelpRequest $helpRequest)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(HelpRequest $helpRequest)
-    {
-        //
-    }
     public function complete(HelpRequest $helpRequest)
     {
         if ($helpRequest->current_status == 'complete') {

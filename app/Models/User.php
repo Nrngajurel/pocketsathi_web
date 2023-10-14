@@ -74,8 +74,8 @@ class User extends Authenticatable
      */
     public function scopeNearby($query, $lat, $lon, $radius)
     {
-        return $query->selectRaw("*,
-            (6371 * acos(cos(radians(?)) * cos(radians(lat)) * cos(radians(lon) - radians(?)) + sin(radians(?)) * sin(radians(lat))) AS distance")
+        return $query
+            ->selectRaw('*, (6371 * acos(cos(radians(?)) * cos(radians(users.lat)) * cos(radians(users.long) - radians(?)) + sin(radians(?)) * sin(radians(users.lat)))) AS distance', [$lat, $lon, $lat])
             ->having('distance', '<=', $radius)
             ->orderBy('distance');
     }

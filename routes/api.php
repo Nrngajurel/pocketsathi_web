@@ -34,7 +34,12 @@ Route::prefix('v1/')->group(function () {
 
         Route::post('/logout', [AuthController::class, 'logout']);
         Route::resource('category', CategoryController::class);
-        Route::get('my-help-request', [HelpRequestController::class, 'myHelpRequest']);
+
+        // my request and nearby request
+        Route::get('requests/my', [HelpRequestController::class, 'myHelpRequest']);
+        Route::get('requests/nearby', [HelpRequestController::class, 'nearbyHelpRequest']);
+
+
         Route::post('help-request', [HelpRequestController::class, 'storeHelpRequest']);
 
         Route::post('help-request/{help_request}/complete', [HelpRequestController::class, 'complete']);

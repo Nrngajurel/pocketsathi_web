@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,6 +15,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
+    $lat = 40.8127; // Example latitude
+    $lon = -74.0060; // Example longitude
+    $radius = 1000; // Example radius in kilometers
+    $nearbyUsers = User::nearby($lat, $lon, $radius)->get();
+    dd($nearbyUsers);
     return view('welcome');
 });
 
