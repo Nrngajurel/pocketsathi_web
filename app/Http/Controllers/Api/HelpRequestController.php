@@ -27,6 +27,9 @@ class HelpRequestController extends Controller
         $helpRequest = HelpRequest::create($data);
         $helpRequest->addStatus('pending');
 
+        // send notification to nearby
+        $helpRequest->notifyNearby();
+
 
         return response()->json([
             'message' => 'Successfully Requested',
@@ -101,4 +104,23 @@ class HelpRequestController extends Controller
             'data' => $helpRequest
         ]);
     }
+
+    // function haversine($lat1, $lon1, $lat2, $lon2)
+    // {
+    //     $radLat1 = deg2rad($lat1);
+    //     $radLon1 = deg2rad($lon1);
+    //     $radLat2 = deg2rad($lat2);
+    //     $radLon2 = deg2rad($lon2);
+
+    //     $dlat = $radLat2 - $radLat1;
+    //     $dlon = $radLon2 - $radLon1;
+
+    //     $a = sin($dlat / 2) * sin($dlat / 2) + cos($radLat1) * cos($radLat2) * sin($dlon / 2) * sin($dlon / 2);
+    //     $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+
+    //     $radius = 6371; // Earth's radius in kilometers
+    //     $distance = $radius * $c;
+
+    //     return $distance;
+    // }
 }

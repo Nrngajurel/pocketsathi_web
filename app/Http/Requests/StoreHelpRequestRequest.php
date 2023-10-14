@@ -22,10 +22,11 @@ class StoreHelpRequestRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'category_id'=> 'required|exists:categories,id',
-            'title'=> 'required|string:255',
-            'description'=> 'required|string',
-            'location'=> 'nullable|array'
+            'category_id' => 'required|exists:categories,id',
+            'title' => 'required|string:255',
+            'description' => 'required|string',
+            'long' => 'nullable|string',
+            'lat' => 'nullable|string'
         ];
     }
 }

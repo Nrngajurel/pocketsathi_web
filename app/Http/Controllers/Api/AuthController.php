@@ -31,8 +31,8 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => 'Successfully registered',
-            'token'=> $token,
-            'user'=> $user
+            'token' => $token,
+            'user' => $user
         ], 201);
     }
 
@@ -55,9 +55,9 @@ class AuthController extends Controller
 
         return response()->json(
             [
-                'message'=> "Login Successfully",
+                'message' => "Login Successfully",
                 'token' => $token,
-                'user'=> $user,
+                'user' => $user,
             ],
             200
         );
@@ -68,5 +68,33 @@ class AuthController extends Controller
         $request->user()->currentAccessToken()->delete();
 
         return response()->json(['message' => 'Successfully logged out']);
+    }
+
+    public function updateFcmToken(Request $request)
+    {
+        $request->validate([
+            'fcm_token' => 'required|string',
+        ]);
+
+        $user = $request->user();
+        $user->fcm_token = $request->fcm_token;
+        $user->save();
+
+        return response()->json(['message' => 'Successfully updated']);
+    }
+
+    public function updateLocation(Request $request)
+    {
+        $request->validate([
+            'long' => 'required|string',
+            'lat' => 'required|string',
+        ]);
+
+        $user = $request->user();
+        $user->long = $request->long;
+        $user->lat = $request->lat;
+        $user->save();
+
+        return response()->json(['message' => 'Successfully updated']);
     }
 }

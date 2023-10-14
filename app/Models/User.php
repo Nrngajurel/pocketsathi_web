@@ -26,7 +26,9 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name',
+        'email',
+        'password',
     ];
 
     /**
@@ -58,4 +60,23 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
+
+
+
+    /**
+     * Scope a query to find nearby users within a specified radius.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param float $lat
+     * @param float $lon
+     * @param float $radius
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeNearby($query, $lat, $lon, $radius)
+    {
+        return $query->selectRaw("*,
+            (6371 * acos(cos(radians(?)) * cos(radians(lat)) * cos(radians(lon) - radians(?)) + sin(radians(?)) * sin(radians(lat))) AS distance")
+            ->having('distance', '<=', $radius)
+            ->orderBy('distance');
+    }
 }

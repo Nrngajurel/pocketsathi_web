@@ -27,13 +27,18 @@ Route::prefix('v1/')->group(function () {
 
 
     Route::middleware('auth:sanctum')->group(function () {
+        Route::post('/update-fcm-token', [AuthController::class, 'updateFcmToken']);
+        // update user location
+        Route::post('/update-location', [AuthController::class, 'updateLocation']);
+
+
         Route::post('/logout', [AuthController::class, 'logout']);
         Route::resource('category', CategoryController::class);
-        Route::get('my-help-request', [HelpRequestController::class,'myHelpRequest']);
-        Route::post('help-request', [HelpRequestController::class,'storeHelpRequest']);
+        Route::get('my-help-request', [HelpRequestController::class, 'myHelpRequest']);
+        Route::post('help-request', [HelpRequestController::class, 'storeHelpRequest']);
 
-        Route::post('help-request/{help_request}/complete', [HelpRequestController::class,'complete']);
-        Route::post('help-request/{help_request}/cancel', [HelpRequestController::class,'cancel']);
+        Route::post('help-request/{help_request}/complete', [HelpRequestController::class, 'complete']);
+        Route::post('help-request/{help_request}/cancel', [HelpRequestController::class, 'cancel']);
 
         Route::post('apply-help-request', [ApplyController::class, 'store']);
         Route::post('apply/{help_request}/{apply}/reject', [ApplyController::class, 'reject']);
